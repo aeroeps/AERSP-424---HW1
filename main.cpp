@@ -198,6 +198,7 @@ class Plane
         double vel;
         double distance;
         bool at_SCE;
+
         std::string origin;
         std::string destination;
         std::map<std::string, std::map<std::string, int >  > flights;
@@ -242,26 +243,37 @@ class Plane
         std::string getDestination() const { return destination; }
 
         // Operate function
-        void operate(double dt) {
+        void operate(double dt) 
+        {
             // Ensure time-related variables are non-negative
             if (dt < 0)
-                dt = 0;
-
-            // Calculate distance to move based on velocity and time
-            double distanceToMove = vel * dt;
-
-            // Update position and remaining distance
-            pos += distanceToMove;
-            distance -= distanceToMove;
-
-            // If destination reached
-            if (distance <= 0) 
             {
-                pos = 0; // Reset position
-                distance = 0; // Ensure non-negative distance
-                at_SCE = !at_SCE; // Toggle at_SCE
-                std::swap(origin, destination); // Swap origin and destination
-                std::cout << "Destination Reached: " << destination << std::endl;
+                dt = 0;
+            }
+
+            // Flow Chart
+            if (pos < distance)
+            {
+                pos += vel * dt;
+                at_SCE = 0;
+            }
+            else
+            {
+                if (destination == "SCE")
+                {
+                    at_SCE = 1;
+
+                    std::string temp1 = origin;
+                    origin = destination;
+                    destination = temp1;
+                }
+                else 
+                {
+                    std::string temp2 = origin;
+                    origin = destination;
+                    destination = temp2;
+                }
+                pos = 0.0;
             }
         }
 };
@@ -275,27 +287,19 @@ int main()
 
     // Questions 5: 
     std::cout << "########################################### Question 5 ###########################################" << std::endl;
-    Plane plane("PHL", "SCE");
+    Plane plane("SCE", "ORD");
     // Picking a random velocity between 400 and 500 mph
-    double velocity = 400 + static_cast<double>(rand()/RAND_MAX*(100));
-
-    //Picking a random timestep that is between 10 and 100 sec
-    double timestep = 10 + static_cast<double>(rand()/RAND_MAX*(90));
-
-    //This is a random number of teh iteration that this will run through that is between 1000 and 2000
-    int maxNumIterations = 1000 + rand() % 1001;
-
-    //Prinitng out values
-    std::cout << "The Initial Velocity: " << velocity << " mph" << std::endl;
-    std::cout << "The Timestep: " << timestep << " s" << std::endl;
-    std::cout << "The Max Interations: " << maxNumIterations << std::endl;
+    plane.setVel(425);
+    double dt = 50;
+    dt = dt/ 3600;
+    int maxNumIterations = 1200;
     
     double time = 0.0; // This is so that we can print out the time
     // Printing out the data of the flight in it's timesteps:
-    for (int i = 0; i < maxNumIterations; ++i) {
-        plane.operate(timestep);
-        time += timestep;
-        std::cout << "Time: " << time << " seconds, Position: " << plane.getPos() << " miles." << std::endl;
+    for (int iter = 0; iter <= maxNumIterations; ++iter) 
+    {
+        plane.operate(dt);
+        std::cout << "Time: " << dt*3600*iter << " seconds, Position: " << plane.getPos() << " miles." << std::endl;
     }
 
     return 0;

@@ -18,7 +18,7 @@ void Question1(double totalWeight, double cgLocation)
 
     // Max Values of Data
     const double MaxGrossWeight = 2950;
-    const double MaxCGLimit = 84.1;
+    const double MaxCGLimit = 84.7;
     const double MinCGLimit = 82.1;
 
     /*
@@ -87,7 +87,7 @@ void Question1(double totalWeight, double cgLocation)
     RSeatWeight[0] = 160;
     RSeatWeight[1] = 170;
     RSeatMomArm = 121;
-    numberofGalofFuel = 39.000;
+    numberofGalofFuel = 30.000;
     fuelWeightPerGallon = 6;
     fuelMomentArm = 75;
     bagWeight = 10;
@@ -120,6 +120,13 @@ void Question1(double totalWeight, double cgLocation)
     std::cout << "\nTotal Weight: " << totalWeight << " pounds\n";
     std::cout << "Center of Gravity (C.G.) Location: " << cgLocation << " inches\n";
    
+   bool designLimmits = false;
+    if (totalWeight < MaxGrossWeight && cgLocation < MaxCGLimit && cgLocation > MinCGLimit)
+    {
+        std::cout << "The airplane is within design limits" << std::endl;
+        designLimmits = true;
+    }
+
     int orginalNumberOfGalOfFuel = numberofGalofFuel;
     
     // Check if the airplane is within design limits
@@ -165,21 +172,22 @@ void Question1(double totalWeight, double cgLocation)
         
         
     }
-    
-    // Output results
-    double addFuelNeeded = numberofGalofFuel - orginalNumberOfGalOfFuel; // Assuming initial fuel is 44 gallons
-    if (addFuelNeeded > 0)
+    if (designLimmits == false)
     {
-        std::cout << "Additional fuel needed (gallons): " << abs(addFuelNeeded) << '\n';
-    }
+        // Output results
+        double addFuelNeeded = numberofGalofFuel - orginalNumberOfGalOfFuel; // Assuming initial fuel is 44 gallons
+        if (addFuelNeeded > 0)
+        {
+            std::cout << "Additional fuel needed (gallons): " << abs(addFuelNeeded) << '\n';
+        }
 
-    if (addFuelNeeded < 0)
-    {
-        std::cout << "Fuel needed to be lost (gallons): " << abs(addFuelNeeded) << '\n';
+        if (addFuelNeeded < 0)
+        {
+            std::cout << "Fuel needed to be lost (gallons): " << abs(addFuelNeeded) << '\n';
+        }
+        std::cout << "New total weight: " << totalWeight << " pounds\n";
+        std::cout << "New C.G. location: " << cgLocation << " inches\n";
     }
-    std::cout << "New total weight: " << totalWeight << " pounds\n";
-    std::cout << "New C.G. location: " << cgLocation << " inches\n";
-
     
 }
 

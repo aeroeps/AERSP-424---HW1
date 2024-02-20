@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/elijahshifflett/Desktop/Penn State /Spring 2024/AERSP 424/AERSP424_HW1/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I\"/Users/elijahshifflett/Desktop/Penn State /Spring 2024/AERSP 424/AERSP424_HW1/include\" -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -mmacosx-version-min=13.6 -o CMakeFiles/main.dir/main.cpp.o -c \"/Users/elijahshifflett/Desktop/Penn State /Spring 2024/AERSP 424/AERSP424_HW1/main.cpp\"",
+  "file": "/Users/elijahshifflett/Desktop/Penn State /Spring 2024/AERSP 424/AERSP424_HW1/main.cpp",
+  "output": "CMakeFiles/main.dir/main.cpp.o"
+}
+]

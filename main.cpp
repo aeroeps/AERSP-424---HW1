@@ -87,7 +87,7 @@ void Question1(double totalWeight, double cgLocation)
     RSeatWeight[0] = 160;
     RSeatWeight[1] = 170;
     RSeatMomArm = 121;
-    numberofGalofFuel = 30.000;
+    numberofGalofFuel = 44.000;
     fuelWeightPerGallon = 6;
     fuelMomentArm = 75;
     bagWeight = 10;
@@ -174,6 +174,7 @@ void Question1(double totalWeight, double cgLocation)
     }
     if (designLimmits == false)
     {
+        std::cout << "The airplane is not within design limits" << std::endl;
         // Output results
         double addFuelNeeded = numberofGalofFuel - orginalNumberOfGalOfFuel; // Assuming initial fuel is 44 gallons
         if (addFuelNeeded > 0)
@@ -206,19 +207,19 @@ class Plane
     public:
         // Constructor
         Plane(const std::string& from, const std::string& to) : pos(0.0), vel(0.0), distance(0.0), at_SCE(true) {
-            // Initialize flights (taken from Question 2)
+            // Initialize flights ( Question 2)
             flights[from][to] = 160;
             flights[from]["ORD"] = 640;
             flights[from]["EWR"] = 220;
 
-            flights[to][from] = 160; // Reverse mapping for PHL
-            flights["ORD"][from] = 640; // Reverse mapping for ORD
-            flights["EWR"][from] = 220; // Reverse mapping for EWR
+            flights[to][from] = 160; // Reverse mapping for PHL incase it is called for
+            flights["ORD"][from] = 640; // Reverse mapping for ORD incase it is called for
+            flights["EWR"][from] = 220; // Reverse mapping for EWR incase it is called for
 
             origin = from;
             destination = to;
             distance = flights[from][to]; // Distance between origin and destination airports
-            std::cout << "Plane Created at " << this << std::endl; // Print memory address of the created plane
+            std::cout << "Plane Created with this tail number " << this << std::endl; // Print memory address of the created plane
         }
 
         // Destructor
@@ -251,7 +252,7 @@ class Plane
                 dt = 0;
             }
 
-            // Flow Chart
+            // Flow Chart logic
             if (pos < distance)
             {
                 pos += vel * dt;
@@ -278,15 +279,46 @@ class Plane
         }
 };
 
+class Pilot 
+{
+    private:
+        std::string name;
+        Plane* myPlane;
+    
+
+    public:
+        Pilot(const std::string& pilotName, Plane* planePtr) : name(pilotName), myPlane(planePtr)
+        {
+            std::cout << "Pilot " << name << " with certificate  number " << this << " is at the gate, and ready to board the plane." << std::endl;       
+            
+        }
+
+
+        ~Pilot()
+        {
+            std::cout << "Pilot " << name << " is out of the plane." << std::endl;
+        }
+
+        // Asking for name:
+        std::string getName() const
+        {
+        return name;
+        }
+};
+
 int main() 
 {
     std::cout << "########################################### Question 1 ###########################################" << std::endl;
     double totalWeight = 0, cgLocation = 0;
     Question1(totalWeight, cgLocation);
 
+    for (int i = 0; i < 3; ++i) 
+    {
+        std::cout << std::endl; // Output a newline character
+    }
 
     // Questions 5: 
-    std::cout << "########################################### Question 5 ###########################################" << std::endl;
+    std::cout << "########################################### Question 2 - 5 ###########################################" << std::endl;
     Plane plane("SCE", "ORD");
     // Picking a random velocity between 400 and 500 mph
     plane.setVel(425);
@@ -294,7 +326,6 @@ int main()
     dt = dt/ 3600;
     int maxNumIterations = 1200;
     
-    double time = 0.0; // This is so that we can print out the time
     // Printing out the data of the flight in it's timesteps:
     for (int iter = 0; iter <= maxNumIterations; ++iter) 
     {
@@ -302,5 +333,41 @@ int main()
         std::cout << "Time: " << dt*3600*iter << " seconds, Position: " << plane.getPos() << " miles." << std::endl;
     }
 
+    for (int i = 0; i < 3; ++i) 
+    {
+        std::cout << std::endl; // Output a newline character
+    }
+
+    // Problem 6 & 7
+    std::cout << "########################################### Question 5 - 7 ###########################################" << std::endl;
+    
+
+    // Create Pilot objects
+    Pilot pilot1("Alpha", &plane);
+    Pilot pilot2("Brovo", &plane);
+    Plane plane1("SCE", "ORD");
+
+   //std::cout << "Plane Created with this tail number " << this << std::endl; // Print memory address of the created plane
+
+    double time = 0.0; // Current time
+    bool switchPilots = false; // Flag to switch between pilots
+
+    // Simulation loop
+    for (int iter = 0; iter <= maxNumIterations; ++iter) {
+        // Switch pilots if the plane lands at SCE
+        if (plane.getAtSCE()) {
+            switchPilots = !switchPilots;
+            std::cout << "Plane landed at SCE. Pilot switching..." << std::endl;
+        }
+
+        // Print pilot and plane information before each iteration
+        if (switchPilots) {
+            std::cout << "Pilot: " << pilot2.getName() << " with ciertificate number " << &pilot2 << " is in control of the Plane: " << &plane << std::endl;
+        } else {
+            std::cout << "Pilot: " << pilot1.getName() << " with ciertificate number " << &pilot1 << " is in control of the Plane: " << &plane << std::endl;
+        }
+    }
     return 0;
 }
+
+

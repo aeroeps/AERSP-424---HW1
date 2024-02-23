@@ -1,6 +1,7 @@
-# include <iostream>
+#include <iostream>
 #include <map>
 #include <string>
+#include "Question_8.h"
 
 
 void Question1(double totalWeight, double cgLocation)
@@ -21,7 +22,7 @@ void Question1(double totalWeight, double cgLocation)
     const double MaxCGLimit = 84.7;
     const double MinCGLimit = 82.1;
 
-    /*
+    
     std::cout << "Enter the airplanes empty weight (Pounds): ";
     std:: cin >> emptyWeight;
 
@@ -34,7 +35,7 @@ void Question1(double totalWeight, double cgLocation)
 
     std::cout << "Enter the weight of each of the frount seat occupents (pounds)" << std::endl;
     int FSeatWeight[numberFrontSeatOcc]; // this will set up the array for number of frount seat passengers
-    for (int i =1; i<numberFrontSeatOcc+1; i++)
+    for (int i =0; i<numberFrontSeatOcc; i++)
     {
         std:: cout << "Frount seat occupant " << i << " weight: ";
         std::cin >> FSeatWeight[i];
@@ -49,7 +50,7 @@ void Question1(double totalWeight, double cgLocation)
 
     std::cout << "Enter the weight of each of the rear seat occupents (pounds)" << std::endl;
     int RSeatWeight[numberRearSeatOcc]; // this will set up the array for number of frount seat passengers
-    for (int i =1; i<numberRearSeatOcc+1; i++)
+    for (int i =0; i<numberRearSeatOcc; i++)
     {
         std:: cout << "Rear seat occupant " << i << " weight: ";
         std::cin >> RSeatWeight[i];
@@ -73,8 +74,8 @@ void Question1(double totalWeight, double cgLocation)
     std::cout << "Enter baggs moment arm(inches): ";
     std::cin >> bagMomentArm;
 
-    */
-
+    
+    /*
     emptyWeight = 2050;
     emptyWeightMoment = 155400;
     numberFrontSeatOcc = 2;
@@ -92,6 +93,7 @@ void Question1(double totalWeight, double cgLocation)
     fuelMomentArm = 75;
     bagWeight = 10;
     bagMomentArm = 140;
+    */
 
     // Calculations - Total Weight
     totalWeight = emptyWeight + (numberofGalofFuel * fuelWeightPerGallon) + bagWeight;
@@ -114,6 +116,7 @@ void Question1(double totalWeight, double cgLocation)
         totalMoment += (RSeatWeight[i] * RSeatMomArm);
     }
     
+
     // Calculations - Locations of Center of Gravity
     cgLocation = totalMoment / totalWeight;
  
@@ -209,13 +212,9 @@ class Plane
         // Constructor
         Plane(const std::string& from, const std::string& to) : pos(0.0), vel(0.0), distance(0.0), at_SCE(true) {
             // Initialize flights ( Question 2)
-            flights[from][to] = 160;
-            flights[from]["ORD"] = 640;
-            flights[from]["EWR"] = 220;
-
-            flights[to][from] = 160; // Reverse mapping for PHL incase it is called for
-            flights["ORD"][from] = 640; // Reverse mapping for ORD incase it is called for
-            flights["EWR"][from] = 220; // Reverse mapping for EWR incase it is called for
+            flights["SCE"]["PHL"] = 160;
+            flights["SCE"]["ORD"] = 640;
+            flights["SCE"]["EWR"] = 220;
 
             origin = from;
             destination = to;
@@ -228,7 +227,7 @@ class Plane
         // Destructor
         ~Plane() 
         {
-            std::cout << "Plane Destroyed" << std::endl;
+            //std::cout << "Plane Destroyed" << std::endl;
         }
 
         // Getter and setter functions
@@ -336,10 +335,10 @@ int main()
     Plane plane("SCE", "ORD");
     plane.setPos(0.0);
     
-    plane.setVel(425); // Picking a random velocity between 400 and 500 mph
-    double dt = 50; // Picking a random number of time steps between 10 and 100 mph
+    plane.setVel(410); // Picking a random velocity between 400 and 500 mph
+    double dt = 30; // Picking a random number of time steps between 10 and 100 mph
     dt = dt/ 3600; 
-    int maxNumIterations = 1200; // Picking a random of iterations that we will run between 1000 and 2000 mph
+    int maxNumIterations = 1800; // Picking a random of iterations that we will run between 1000 and 2000 mph
     
     // Printing out the data of the flight in it's timesteps:
     for (int iter = 0; iter <= maxNumIterations; ++iter) 
@@ -353,14 +352,13 @@ int main()
         std::cout << std::endl; // Space
     }
 
-    // Problem 6 & 7
+    // Problem 7 - Old Pointers
     std::cout << "########################################### Question 5 - 7 ###########################################" << std::endl;
     
     Pilot* pilot = new Pilot("Alpha");
     Pilot* copilot = new Pilot("Bata");
     Plane plane1("SCE", "ORD");
 
-    pilot->myPlane = &plane;
 
     // Simulation loop
     for (int iter = 0; iter <= maxNumIterations; ++iter) 
@@ -388,8 +386,49 @@ int main()
         
     }
 
+    std::cout << "Plane Destroyed" << std::endl;
     delete pilot;
     delete copilot;
+    
+    
+    // Print out line spacing
+    for (int i = 0; i < 3; ++i) 
+    {
+        std::cout << std::endl; // Space
+    }
+
+    // Question 8 - New Pointers
+    std::cout << "########################################### Question 8 ###########################################" << std::endl;
+    
+    std::shared_ptr<Pilotnew> pilotnew = std:: make_shared<Pilotnew>("AlphaNew");
+    std::shared_ptr<Pilotnew> copilotnew = std:: make_shared<Pilotnew>("BataNew");
+
+    std::shared_ptr<Planenew> planenew = std::make_shared<Planenew>("SCE", "ORD");
+
+
+    // Simulation loop
+    for (int iter = 0; iter <= maxNumIterations; ++iter) 
+    {
+        plane.operate(dt);
+        
+        
+        if (iter == 0)
+        {
+            std::cout << "The plane " << planenew.get() << " is at SCE" << std::endl;
+            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << std::endl;
+        }
+
+        if (plane.getAtSCE())
+        {
+            std::cout << "The plane " << planenew.get() << " is at SCE" << std::endl;
+            std::swap(pilotnew, copilotnew);
+            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << std::endl;
+        }   
+    }
     
     return 0;
 }

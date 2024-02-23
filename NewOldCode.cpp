@@ -1,7 +1,7 @@
 # include <iostream>
 #include <map>
 #include <string>
-
+# include <cmath>
 
 void Question1(double totalWeight, double cgLocation)
 {
@@ -200,10 +200,10 @@ class Plane
         double distance;
         bool at_SCE;
 
-        std::string tailNumber;
         std::string origin;
         std::string destination;
-        std::map<std::string, std::map<std::string, int >  > flights;
+
+        std::map<std::string, std::map<std::string, int >  > flights; // Container
 
     public:
         // Constructor
@@ -223,8 +223,6 @@ class Plane
             std::cout << "Plane Created with this tail number " << this << std::endl; // Print memory address of the created plane
         }
 
-        Plane(const std::string& tailNum) : tailNumber(tailNum), at_SCE(true) {} // New
-
         // Destructor
         ~Plane() 
         {
@@ -240,15 +238,12 @@ class Plane
 
         double getDistance() const { return distance; }
 
-        bool getAtSCE() const { return at_SCE; }
-
-        void setAtSCE(bool atSce) { at_SCE = atSce; }
-
-        std::string getTailNumber() const { return tailNumber; }
-
         std::string getOrigin() const { return origin; }
 
         std::string getDestination() const { return destination; }
+
+        bool getAt_SCE() const {
+        return at_SCE;
 
         // Operate function
         void operate(double dt) 
@@ -290,34 +285,29 @@ class Pilot
 {
     private:
         std::string name;
-        
+        Plane* myPlane;
+
     public:
-    // Constructor
-        Pilot(std::string name)
-        {
-            this->name = name;
-            std::cout << "Pilot " << name << " with certificate  number " << this << " is at the gate, and ready to board the plane." << std::endl;
+        Pilot(const std::string& pilotName) : name(pilotName), myPlane(nullptr) {
+            std::cout << "The Pilot's name is " << name << ". The memory address is: " << this << std::endl;
+            std::cout << "The Pilot is at the gate and ready to board the plane." << std::endl;
         }
 
-        // Deconstructor
-        ~Pilot()
-        {
+        ~Pilot() {
             std::cout << "Pilot " << name << " is out of the plane." << std::endl;
         }
 
-        // Asking for name:
-        std::string getName() const
-        {
-        return name;
+        std::string getName() const {
+            return name;
         }
 
-        Plane* myPlane;
-};
+        void setPlane(Plane* plane) {
+            myPlane = plane;
+        }
 
-void swap(Pilot*& pilot, Pilot*& copilot)
-{
-    std::swap(pilot->myPlane, copilot->myPlane);
-    std::swap(pilot, copilot);
+        Plane* getPlane() const {
+            return myPlane;
+        }
 };
 
 int main() 
@@ -335,17 +325,26 @@ int main()
     std::cout << "########################################### Question 2 - 5 ###########################################" << std::endl;
     Plane plane("SCE", "ORD");
     plane.setPos(0.0);
-    
-    plane.setVel(425); // Picking a random velocity between 400 and 500 mph
-    double dt = 50; // Picking a random number of time steps between 10 and 100 mph
-    dt = dt/ 3600; 
-    int maxNumIterations = 1200; // Picking a random of iterations that we will run between 1000 and 2000 mph
+    // Picking a random velocity between 400 and 500 mph
+    plane.setVel(425);
+    double dt = 50;
+    dt = dt/ 3600;
+    int maxNumIterations = 1200;
     
     // Printing out the data of the flight in it's timesteps:
     for (int iter = 0; iter <= maxNumIterations; ++iter) 
-    {    
-        std::cout << "Time: " << dt * 3600 * iter << " seconds, Position: " << plane.getPos() << " miles.\n";
-        plane.operate(dt);        
+    {
+        if (iter == 0)
+        {
+            plane.setPos(0.0);
+            std::cout << "Time: " << dt * 3600 * iter << " seconds, Position: " << plane.getPos() << " miles.\n";
+        }
+
+        if (iter != 0)
+        {
+            plane.operate(dt);
+            std::cout << "Time: " << dt * 3600 * iter << " seconds, Position: " << plane.getPos() << " miles.\n";
+        }
     }
 
     for (int i = 0; i < 3; ++i) 
@@ -356,40 +355,65 @@ int main()
     // Problem 6 & 7
     std::cout << "########################################### Question 5 - 7 ###########################################" << std::endl;
     
-    Pilot* pilot = new Pilot("Alpha");
-    Pilot* copilot = new Pilot("Bata");
+    Pilot pilot1("Alpha");
+    Pilot pilot2("Bravo");
     Plane plane1("SCE", "ORD");
 
-    pilot->myPlane = &plane;
+    pilot1.setPlane(&plane);
+    pilot2.setPlane(&plane1);
+
+    for (int iter = 0; iter <= maxNumIterations; ++iter) 
+    {
+        if (iter == 0) {
+            std::cout << "The plane " << pilot1.getPlane() << " is at SCE" << std::endl;
+            std::cout << "Pilot " << pilot1.getName() << " with certificate number " << &pilot1 << std::endl;
+            std::cout << "Pilot " << pilot2.getName() << " with certificate number " << &pilot2 << std::endl;
+            std::cout << std::endl;
+        }
+
+        if (plane.getAt_SCE()) {
+            std::cout << "The plane " << &plane << " is at SCE" << std::endl;
+            std::swap(pilot1.getPlane(), pilot2.getPlane());
+            std::cout << "Pilot " << pilot1.getName() << " with certificate number " << &pilot1 << std::endl;
+            std::cout << "Pilot " << pilot2.getName() << " with certificate number " << &pilot2 << std::endl;
+            std::cout << std::endl;
+        }   
+    }
+    
+    
+    /*
+    Pilot_in_command->myPlane = &plane;
 
     // Simulation loop
     for (int iter = 0; iter <= maxNumIterations; ++iter) 
     {
         plane.operate(dt);
         
-        
         if (iter == 0)
         {
-            std::cout << "The plane " << &plane << " is at SCE" << std::endl;
-            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in controle of the plane: "<< &plane << std::endl;
-            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in controle of the plane: "<< &plane << std::endl;
-            std::cout << std::endl;
+            std::cout << "The plane " << Plilot_in_comand->myPlane << " is at SCE" << std::endl;
+            std::cout << "Pilot " << Plilot_in_comand->getName() << " with certificate number " << Plilot_in_comand->&getName() << std::endl;
+            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot->&getName() << std::endl;
+            std::cout << endl;
         }
 
-        if (plane.getAtSCE())
+        if (plane.getAt_SCE())
         {
-            std::cout << "The plane " << &plane << " is at SCE" << std::endl;
-            std::swap(pilot, copilot);
-            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in controle of the plane: "<< &plane << std::endl;
-            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in controle of the plane: "<< &plane << std::endl;
+            std::cout << "The plane " << &plane << " is at SCE" << endl;
+            swap(Plilot_in_comand->myPlane, copilot->myPlane);
+            std::cout << "Pilot " << Plilot_in_comand->getName() << " with certificate number " << Plilot_in_comand->&getName() << std::endl;
+            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot->&getName() << std::endl;
             std::cout << std::endl;
         }   
 
-        
-    }
-
-    delete pilot;
-    delete copilot;
+        delete Plilot_in_comand;
+        delete copilot;
     
+
+
+    }
+    */
     return 0;
 }
+
+

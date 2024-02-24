@@ -30,18 +30,18 @@ void Question1(double totalWeight, double cgLocation)
     std::cin >> emptyWeightMoment;
 
     // Frount Seat Data
-    std::cout << "Enter the number of frount seat occupants: ";
+    std::cout << "Enter the number of front seat occupants: ";
     std::cin >> numberFrontSeatOcc;
 
-    std::cout << "Enter the weight of each of the frount seat occupents (pounds)" << std::endl;
+    std::cout << "Enter the weight of each of the front seat occupents (pounds)" << std::endl;
     int FSeatWeight[numberFrontSeatOcc]; // this will set up the array for number of frount seat passengers
     for (int i =0; i<numberFrontSeatOcc; i++)
     {
-        std:: cout << "Frount seat occupant " << i << " weight: ";
+        std:: cout << "Front seat occupant " << i+1 << " weight: ";
         std::cin >> FSeatWeight[i];
     }
 
-    std::cout << "Enter frount seat moment arm (inches): ";
+    std::cout << "Enter front seat moment arm (inches): ";
     std::cin >> FSeatMomArm;
 
     // Rear Seat Data
@@ -52,7 +52,7 @@ void Question1(double totalWeight, double cgLocation)
     int RSeatWeight[numberRearSeatOcc]; // this will set up the array for number of frount seat passengers
     for (int i =0; i<numberRearSeatOcc; i++)
     {
-        std:: cout << "Rear seat occupant " << i << " weight: ";
+        std:: cout << "Rear seat occupant " << i+1 << " weight: ";
         std::cin >> RSeatWeight[i];
     }
 
@@ -75,26 +75,6 @@ void Question1(double totalWeight, double cgLocation)
     std::cin >> bagMomentArm;
 
     
-    /*
-    emptyWeight = 2050;
-    emptyWeightMoment = 155400;
-    numberFrontSeatOcc = 2;
-    int FSeatWeight[2];
-    FSeatWeight[0] = 180;
-    FSeatWeight[1] = 150;
-    FSeatMomArm = 85;
-    numberRearSeatOcc = 2;
-    int RSeatWeight[2];
-    RSeatWeight[0] = 160;
-    RSeatWeight[1] = 170;
-    RSeatMomArm = 121;
-    numberofGalofFuel = 44.000;
-    fuelWeightPerGallon = 6;
-    fuelMomentArm = 75;
-    bagWeight = 10;
-    bagMomentArm = 140;
-    */
-
     // Calculations - Total Weight
     totalWeight = emptyWeight + (numberofGalofFuel * fuelWeightPerGallon) + bagWeight;
     for (int i = 0; i < numberFrontSeatOcc; ++i)
@@ -356,7 +336,7 @@ int main()
     std::cout << "########################################### Question 5 - 7 ###########################################" << std::endl;
     
     Pilot* pilot = new Pilot("Alpha");
-    Pilot* copilot = new Pilot("Bata");
+    Pilot* copilot = new Pilot("Beta");
     Plane plane1("SCE", "ORD");
 
 
@@ -369,8 +349,8 @@ int main()
         if (iter == 0)
         {
             std::cout << "The plane " << &plane << " is at SCE" << std::endl;
-            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in controle of the plane: "<< &plane << std::endl;
-            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in controle of the plane: "<< &plane << std::endl;
+            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in control of the plane: "<< &plane << std::endl;
+            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in control of the plane: "<< &plane << std::endl;
             std::cout << std::endl;
         }
 
@@ -378,18 +358,17 @@ int main()
         {
             std::cout << "The plane " << &plane << " is at SCE" << std::endl;
             std::swap(pilot, copilot);
-            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in controle of the plane: "<< &plane << std::endl;
-            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in controle of the plane: "<< &plane << std::endl;
+            std::cout << "Pilot " << pilot->getName() << " with certificate number " << pilot << " is in control of the plane: "<< &plane << std::endl;
+            std::cout << "Pilot " << copilot->getName() << " with certificate number " << copilot << " is in control of the plane: "<< &plane << std::endl;
             std::cout << std::endl;
         }   
 
         
     }
 
-    std::cout << "Plane Destroyed" << std::endl;
     delete pilot;
     delete copilot;
-    
+    std::cout << "Plane Destroyed" << std::endl;    
     
     // Print out line spacing
     for (int i = 0; i < 3; ++i) 
@@ -401,7 +380,7 @@ int main()
     std::cout << "########################################### Question 8 ###########################################" << std::endl;
     
     std::shared_ptr<Pilotnew> pilotnew = std:: make_shared<Pilotnew>("AlphaNew");
-    std::shared_ptr<Pilotnew> copilotnew = std:: make_shared<Pilotnew>("BataNew");
+    std::shared_ptr<Pilotnew> copilotnew = std:: make_shared<Pilotnew>("BetaNew");
 
     std::shared_ptr<Planenew> planenew = std::make_shared<Planenew>("SCE", "ORD");
 
@@ -415,8 +394,8 @@ int main()
         if (iter == 0)
         {
             std::cout << "The plane " << planenew.get() << " is at SCE" << std::endl;
-            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
-            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in control of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in control of the plane: "<< planenew.get() << std::endl;
             std::cout << std::endl;
         }
 
@@ -424,8 +403,8 @@ int main()
         {
             std::cout << "The plane " << planenew.get() << " is at SCE" << std::endl;
             std::swap(pilotnew, copilotnew);
-            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
-            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in controle of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << pilotnew->getName() << " with certificate number " << pilotnew.get() << " is in control of the plane: "<< planenew.get() << std::endl;
+            std::cout << "Pilot " << copilotnew->getName() << " with certificate number " << copilotnew.get() << " is in control of the plane: "<< planenew.get() << std::endl;
             std::cout << std::endl;
         }   
     }
